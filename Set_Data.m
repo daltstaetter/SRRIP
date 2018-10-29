@@ -220,7 +220,7 @@ cycles_SRRIP_canneal 		= 5815281201;
 IPC_SRRIP_canneal 			= 0.296104109584;
 MPKI_SRRIP_canneal 			= 11.9204438912;
 
-cycles_SRRIP_dedup 			= 0;
+cycles_SRRIP_dedup 			= 3604378922;
 IPC_SRRIP_dedup 			  = 1.31670803218;
 MPKI_SRRIP_dedup 		  	= 0.984618928471;
                               

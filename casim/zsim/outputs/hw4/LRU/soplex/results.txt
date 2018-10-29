@@ -3,8 +3,3 @@ outputs/hw4/LRU/soplex/zsim.out
 0.438776429383
 20.9452857725
 
-outputs/hw4/LRU/soplex/zsim.out
-227909592
-0.438776429383
-20.9452857725
-

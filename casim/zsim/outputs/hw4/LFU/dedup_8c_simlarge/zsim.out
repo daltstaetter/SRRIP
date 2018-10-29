@@ -5,7 +5,7 @@ root: # Stats
   domain-0: # Domain stats
    time: 0 # Weave simulation time
  time: # Simulator time breakdown
-  init: 603698414
+  init: 789254679
   bound: 0
   weave: 0
   ff: 0

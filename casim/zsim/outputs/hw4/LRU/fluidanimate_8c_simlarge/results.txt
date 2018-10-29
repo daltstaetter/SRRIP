@@ -3,8 +3,3 @@ outputs/hw4/LRU/fluidanimate_8c_simlarge/zsim.out
 1.34697815894
 0.898087868196
 
-outputs/hw4/LRU/fluidanimate_8c_simlarge/zsim.out
-3712023967
-1.34697815894
-0.898087868196
-

@@ -3,8 +3,3 @@ outputs/hw4/LRU/milc/zsim.out
 0.66467125361
 14.9446776433
 
-outputs/hw4/LRU/milc/zsim.out
-150453561
-0.66467125361
-14.9446776433
-

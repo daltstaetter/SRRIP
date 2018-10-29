@@ -3,8 +3,3 @@ outputs/hw4/LRU/libquantum/zsim.out
 0.511214635582
 25.0455917933
 
-outputs/hw4/LRU/libquantum/zsim.out
-195615585
-0.511214635582
-25.0455917933
-

@@ -3,8 +3,3 @@ outputs/hw4/LRU/x264_8c_simlarge/zsim.out
 1.63079026919
 0.795644205158
 
-outputs/hw4/LRU/x264_8c_simlarge/zsim.out
-3066030531
-1.63079026919
-0.795644205158
-

@@ -1,0 +1,5 @@
+outputs/hw4/SRRIP/blackscholes_8c_simlarge/zsim.out
+2976006196
+1.36515165374
+0.00724493602626
+

@@ -1,0 +1,5 @@
+outputs/hw4/SRRIP/sjeng/zsim.out
+82677922
+1.20963464708
+0.368792829371
+

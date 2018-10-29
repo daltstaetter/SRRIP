@@ -1,0 +1,10 @@
+outputs/hw4/LRU/xalan/zsim.out
+63224231
+1.5818300898
+1.33404671539
+
+outputs/hw4/LRU/xalan/zsim.out
+63224231
+1.5818300898
+1.33404671539
+

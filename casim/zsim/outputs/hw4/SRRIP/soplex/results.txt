@@ -1,0 +1,5 @@
+outputs/hw4/SRRIP/soplex/zsim.out
+231037772
+0.432837527536
+21.0814467393
+

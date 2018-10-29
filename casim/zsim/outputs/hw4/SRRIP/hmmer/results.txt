@@ -1,0 +1,5 @@
+outputs/hw4/SRRIP/hmmer/zsim.out
+63554788
+1.57358578554
+1.26161757726
+

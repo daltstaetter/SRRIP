@@ -1,0 +1,5 @@
+outputs/hw4/SRRIP/leslie3d/zsim.out
+217889407
+0.458959177396
+23.8750106085
+

@@ -1,0 +1,10 @@
+outputs/hw4/LRU/sjeng/zsim.out
+82607916
+1.21062675156
+0.36225336351
+
+outputs/hw4/LRU/sjeng/zsim.out
+82607916
+1.21062675156
+0.36225336351
+

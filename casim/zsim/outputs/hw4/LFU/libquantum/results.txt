@@ -1,0 +1,5 @@
+outputs/hw4/LFU/libquantum/zsim.out
+195619097
+0.511202922075
+25.0456060193
+

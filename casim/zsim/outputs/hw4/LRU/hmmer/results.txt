@@ -1,0 +1,10 @@
+outputs/hw4/LRU/hmmer/zsim.out
+77629605
+1.288191715
+1.56272165223
+
+outputs/hw4/LRU/hmmer/zsim.out
+77629605
+1.288191715
+1.56272165223
+

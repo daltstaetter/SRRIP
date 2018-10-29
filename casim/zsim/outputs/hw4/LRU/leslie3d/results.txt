@@ -1,0 +1,10 @@
+outputs/hw4/LRU/leslie3d/zsim.out
+217334159
+0.460161018683
+23.8220055798
+
+outputs/hw4/LRU/leslie3d/zsim.out
+217334159
+0.460161018683
+23.8220055798
+

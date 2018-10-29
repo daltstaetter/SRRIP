@@ -1,0 +1,10 @@
+outputs/hw4/LRU/calculix/zsim.out
+49437227
+2.02316913932
+0.0588782997043
+
+outputs/hw4/LRU/calculix/zsim.out
+49437227
+2.02316913932
+0.0588782997043
+

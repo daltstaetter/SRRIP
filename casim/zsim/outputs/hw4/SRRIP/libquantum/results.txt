@@ -1,0 +1,5 @@
+outputs/hw4/SRRIP/libquantum/zsim.out
+195288470
+0.512086878452
+25.0494619436
+

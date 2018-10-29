@@ -1,0 +1,5 @@
+outputs/hw4/SRRIP/cactusADM/zsim.out
+94129623
+1.06245789383
+4.75715322581
+

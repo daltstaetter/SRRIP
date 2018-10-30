@@ -12,7 +12,7 @@ import os
 filename = sys.argv[1]
 dirname = os.path.dirname(filename)
 fp = open(filename, "r")
-wp = open(dirname + '/results_multicore.txt', "w")
+wp = open(dirname + '/results_multicore_attempt2.txt', "w")
 cycleCount = 0
 cCycles = 0;
 cycles = 0;
@@ -24,11 +24,11 @@ values = 0
 for line in fp:
   values = line.split()
   if (values):
-    if (values[0] == "cycles:"):
+    if (values[0] == "cycles:"):`
 		cycles = int(values[1])
-	elif (values[0] == "cCycles:"):
-		cCycles = int(values[1])
-		cycleCount += max(cycles, cCycles)	
+    elif (values[0] == "cCycles:"):
+        cCycles = int(values[1])
+        cycleCount = max(cycleCount, cycles + cCycles)	
     elif (values[0] == "instrs:"):
       instructionCount += int(values[1])
     elif (values[0] == "l3:"):

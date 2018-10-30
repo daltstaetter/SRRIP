@@ -124,7 +124,30 @@ cycles_LRU_canneal 			= 5964300845;
 IPC_LRU_canneal 		  	= 0.288713773291;
 MPKI_LRU_canneal 		  	= 13.2381024016;
 
-cycles_LRU_dedup 			= 7721119954;
+%
+%cycles = 0
+%   cycles1= 458067145 # Simulated unhalted cycles
+%   cycles2= 458594882 # Simulated unhalted cycles
+%   cycles3= 458591361 # Simulated unhalted cycles
+%   cycles4= 458591508 # Simulated unhalted cycles
+%   cycles5= 458591440 # Simulated unhalted cycles
+%   cycles6= 457807700 # Simulated unhalted cycles
+%   cycles7= 458592316 # Simulated unhalted cycles
+%   cycles8= 458592186 # Simulated unhalted cycles
+%   
+%cycles = cycles + cycles1
+%cycles = cycles + cycles2
+%cycles = cycles + cycles3
+%cycles = cycles + cycles4
+%cycles = cycles + cycles5
+%cycles = cycles + cycles6
+%cycles = cycles + cycles7
+%cycles = cycles + cycles8   
+
+
+
+
+cycles_LRU_dedup 			= 3667428538;
 IPC_LRU_dedup 				= 1.29515163883;
 MPKI_LRU_dedup 				= 4.0264164793;
 

@@ -1,0 +1,5 @@
+outputs/hw4/SRRIP/canneal_8c_simlarge/zsim.out
+4880832076
+0.352794080023
+11.9204438912
+

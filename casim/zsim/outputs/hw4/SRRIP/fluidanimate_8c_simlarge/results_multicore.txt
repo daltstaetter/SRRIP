@@ -1,0 +1,5 @@
+outputs/hw4/SRRIP/fluidanimate_8c_simlarge/zsim.out
+3568176925
+1.40129386662
+0.880447252796
+

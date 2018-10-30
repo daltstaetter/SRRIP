@@ -1,0 +1,5 @@
+outputs/hw4/SRRIP/streamcluster_8c_simlarge/zsim.out
+4361598212
+1.14638231583
+2.07851704897
+

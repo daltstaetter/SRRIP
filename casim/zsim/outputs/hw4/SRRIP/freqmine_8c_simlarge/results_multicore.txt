@@ -1,0 +1,5 @@
+outputs/hw4/SRRIP/freqmine_8c_simlarge/zsim.out
+4126279982
+1.21176106464
+1.06814222357
+

@@ -1,0 +1,5 @@
+outputs/hw4/SRRIP/x264_8c_simlarge/zsim.out
+2998199184
+1.66770144848
+0.750672618097
+

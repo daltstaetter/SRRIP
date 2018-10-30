@@ -1,5 +1,5 @@
-outputs/hw4/SRRIP/bodytrack_8c_simlarge/zsim.out
 396114113
 12.6227070859
 0.0313543966918
-
+5000032421
+156773

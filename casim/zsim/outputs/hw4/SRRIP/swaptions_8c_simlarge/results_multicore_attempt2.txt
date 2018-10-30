@@ -1,0 +1,5 @@
+outputs/hw4/SRRIP/swaptions_8c_simlarge/zsim.out
+392921021
+12.7253430658
+0.00224397541052
+

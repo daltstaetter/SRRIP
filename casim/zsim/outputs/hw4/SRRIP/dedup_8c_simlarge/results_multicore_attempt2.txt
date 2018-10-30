@@ -1,0 +1,5 @@
+outputs/hw4/SRRIP/dedup_8c_simlarge/zsim.out
+474922786
+10.5281916311
+1.0200956659
+

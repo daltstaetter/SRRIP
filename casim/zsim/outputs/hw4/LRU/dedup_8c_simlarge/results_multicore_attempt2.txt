@@ -1,0 +1,5 @@
+outputs/hw4/LRU/dedup_8c_simlarge/zsim.out
+491936083
+20.3278871129
+4.0264164793
+

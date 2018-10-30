@@ -4,9 +4,9 @@ from __future__ import division
 import sys
 import os
 
-#print "This is the name of the script: ", sys.argv[0]
-#print "Number of arguments: ", len(sys.argv)
-#print "The arguments are: " , str(sys.argv)
+print "This is the name of the script: ", sys.argv[0]
+print "Number of arguments: ", len(sys.argv)
+print "The arguments are: " , str(sys.argv)
 
 
 filename = sys.argv[1]
@@ -24,7 +24,7 @@ values = 0
 for line in fp:
   values = line.split()
   if (values):
-    if (values[0] == "cycles:"):`
+    if (values[0] == "cycles:"):
 		cycles = int(values[1])
     elif (values[0] == "cCycles:"):
         cCycles = int(values[1])

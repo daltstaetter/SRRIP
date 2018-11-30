@@ -236,14 +236,6 @@ class LIRSReplPolicy : public ReplPolicy
 					myCache[blockID].IRR = INT_MAX;
 					myCache[blockID].is_HIR = TRUE;
 				}
-				
-				// else brand new entry
-				//	1) move HIRS to HIRS_nonresident
-				//		a. Find HIRS_nonresident with maxRecency & replace it
-				//myCache[blockID].IRR = myCache[blockID].Recency; // This should be set to INT_MAX in replace
-				//myCache[blockID].Recency = 0;
-				
-				
             }
             else // update() called after a HIT!!!
             {
@@ -258,7 +250,7 @@ class LIRSReplPolicy : public ReplPolicy
 				myCache[blockID].IRR = myCache[blockID].Recency;
 				myCache[blockID].Recency = 0;
 				
-/*				if(myCache[blockID].is_HIR) // -> promote to LIR
+				if(myCache[blockID].is_HIR) // -> promote to LIR
 				{
 					// 1) Search through LIR blocks in cache
 					// 2) Find the LIR entry with the max(Recency), i.e. myCache[maxRecencyIndex]
@@ -286,7 +278,7 @@ class LIRSReplPolicy : public ReplPolicy
 						myCache[maxRecencyIndex].is_HIR = TRUE;
 					}
 				}
-  */          }
+            }
 
 			// Increment the Recency of all blocks in the cache
 			for (uint32_t i = 0; i < numLines; i++)
@@ -312,8 +304,8 @@ class LIRSReplPolicy : public ReplPolicy
 		// TODO
         void replaced(uint32_t blockID)
         {           
-//            assert(blockID >= 0);
-//            assert(blockID <= numLines); 
+            assert(blockID >= 0);
+            assert(blockID <= numLines); 
             
             is_new_entry = TRUE; // used to set value in update()
 			//is_nonresident_HIR = FALSE;

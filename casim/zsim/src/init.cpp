@@ -172,6 +172,9 @@ BaseCache* BuildCacheBank(Config& config, const string& prefix, g_string& name, 
         // add your SRRIP construction code here
         // 10/23 DA: TODO
         rp = new SRRIPReplPolicy(numLines, rpvMax); 
+	} else if (replType == "LIRS") {
+        // 11/29 DA: Add LIRS construction code here
+        rp = new LIRSReplPolicy(numLines);
     } else if (replType == "WayPart" || replType == "Vantage" || replType == "IdealLRUPart") {
         if (replType == "WayPart" && arrayType != "SetAssoc") panic("WayPart replacement requires SetAssoc array");
 

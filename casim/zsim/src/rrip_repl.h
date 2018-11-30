@@ -52,7 +52,6 @@ class SRRIPReplPolicy : public ReplPolicy {
 			{
 				value_array[i] = MAX_VALUE;
 			}
-
         }
         
         // De-constructor
@@ -83,7 +82,6 @@ class SRRIPReplPolicy : public ReplPolicy {
             assert(value_array[instructionID] <= MAX_VALUE);
 		}
 
-
         void replaced(uint32_t instructionID)
         {           
             assert(instructionID >= 0);
@@ -93,7 +91,6 @@ class SRRIPReplPolicy : public ReplPolicy {
             instruction_array[instructionID] = CLEAR_CACHE_ENTRY; // set to invalid until it gets set in the calling function postinsert()  
             value_array[instructionID] = (uint32_t)CLEAR_RPV;            
         }
-
 
         template <typename C> inline uint32_t rank(const MemReq* req, C cands) 
         {
@@ -132,12 +129,21 @@ class SRRIPReplPolicy : public ReplPolicy {
 
 /*******************************************************************************/
 // LIRS Cache Replacement Policy
+//
+// Note: Make a one-to-one mapping between myCache[blockID] and array[id] (cache_arrays.cpp:43)
+//		 I do this because 'id' is the index, i.e. array[id], and not actually the instruction
+//		 The only way to get the instruction is to map them to the same indices
+//       i.e. array[id] -> myCache[blockID]
 
 #include <climits>
+
+typedef uint32_t boolean
 
 struct Block {
 	uint32_t IRR; // number of blocks between two calls to the same block
 	uint32_t Recency;
+	//uint32_t blockID;
+	boolean is_HIR;
 };
 
 typedef struct Block Block_t;
@@ -153,7 +159,9 @@ class LIRSReplPolicy : public ReplPolicy
 		uint32_t HIRS_size;
 		uint32_t HIRS_size_nonresident;
 		const uint32_t HIRS_divisor = 100; // Make HIRS_size = cache_size / HIRS_divisor
-        uint32_t is_new_entry;
+        boolean is_new_entry;
+		boolean is_nonresident_HIR;
+		uint32_t HIR_nonresident_replace_index;
 
     public:
         // add member methods here, refer to repl_policies.h
@@ -162,7 +170,7 @@ class LIRSReplPolicy : public ReplPolicy
         // Constructor
 		explicit LIRSReplPolicy(uint32_t _numLines) : numLines(_numLines) 
         {
-			// Used for small cache size, i.e. cache_size / HIRS_divisor == 0
+			// Used for small cache size (<=100), i.e. cache_size / HIRS_divisor == 0
 			if (numLines <= HIRS_divisor)
 			{
 				LIRS_size = numLines - 1;
@@ -185,12 +193,14 @@ class LIRSReplPolicy : public ReplPolicy
 			{
 				myCache[i].IRR = INT_MAX;
 				myCache[i].Recency = INT_MAX;
+				myCache[i].is_HIR = TRUE;
 			}
 			
 			for(uint32_t i = 0; i < HIRS_size_nonresident; i++)
 			{
 				HIRS_nonresident[i].IRR = INT_MAX;
 				HIRS_nonresident[i].Recency = INT_MAX;
+				HIRS_nonresident[i].is_HIR = TRUE;
 			}
         }
         
@@ -202,21 +212,166 @@ class LIRSReplPolicy : public ReplPolicy
         }
 
 		// TODO
-		void update(uint32_t instructionID, const MemReq* req)
+        // input: blockID = the index in the array (array[id]) of the hit/miss we want to update
+		// ******* Corner Case: you get same instruction twice. You only update the recency and IRR of that block
+		// ******* All other blocks remain untouched.
+		void update(uint32_t blockID, const MemReq* req)
 		{
+            // Cache miss & update is being called after a replace()
+            // Set the new value to MAX_VALUE-1 
+            // Reset is_new_entry to be false
+            if(is_new_entry) // update() called after a cache miss!
+            {	// If we are in here then blockID is the index that we want to replace.
+				// This is set in the rank() function
+				
+				if (is_nonresident_HIR)
+                {	// Transfer Recency value from HIRS_nonresident if array[blockID] is in there 
+					myCache[blockID].IRR = HIRS_nonresident[HIR_nonresident_replace_index].Recency;
+					myCache[blockID].Recency = 0;
+					is_nonresident_HIR = FALSE;
+				}
+				else // is a brand new entry not in myCache or HIRS_nonresident
+				{	// Do I need to check all the myCache Recency values???
+					// Provide default values for a new entry 
+					myCache[blockID].Recency = INT_MAX;  
+					myCache[blockID].IRR = INT_MAX;
+					myCache[blockID].is_HIR = TRUE;
+				}
+				
+				// else brand new entry
+				//	1) move HIRS to HIRS_nonresident
+				//		a. Find HIRS_nonresident with maxRecency & replace it
+				//myCache[blockID].IRR = myCache[blockID].Recency; // This should be set to INT_MAX in replace
+				//myCache[blockID].Recency = 0;
+				
+				
+            }
+            else // update() called after a HIT!!!
+            {
+				// 1) Update
+				//    a. if LIR_HIT update current_block
+				//	  b. if HIR_HIT update block and move to LIR
+				// 2) Increment all other values properly (Don't double count)
+				//	  a. Algorithm is to count how many instructions have a Recency value <= myRecency and set recency= that
+				//	  b. need to skip this calculation for the current blockID
+				
+				
+				// Update block values
+				myCache[blockID].IRR = myCache[blockID].Recency;
+				myCache[blockID].Recency = 0;
+				
+				if(myCache[blockID].is_HIR) // -> promote to LIR
+				{
+					// 1) Search through LIR blocks in cache
+					// 2) Find the LIR entry with the max(Recency), i.e. myCache[maxRecencyIndex]
+					// 3) Switch myCache[blockID] with myCache[maxRecencyIndex] 
+					// 		a. Set myCache[blockID].is_HIR = FALSE;
+					// 		b. Set myCache[maxRecencyIndex].is_HIR = TRUE;
+					
+					uint32_t maxRecency = 0;
+					uint32_t maxRecencyIndex = 0;
+					
+					// 1) Search through LIR blocks in cache
+					for (uint32_t i = 0; i < numLines; i++)
+					{
+						if (myCache[i].is_HIR == FALSE)
+						{   // 2) Find the LIR entry with the max(Recency)
+							maxRecencyIndex = (maxRecency > myCache[i].Recency) ? maxRecencyIndex : i;
+							maxRecency = (maxRecency > myCache[i].Recency) ? maxRecency : myCache[i].Recency;
+						}
+					}
+					
+					// 3) Switch block sets
+					if (myCache[blockID].Recency < maxRecency)
+					{
+						myCache[blockID].is_HIR = FALSE;
+						myCache[maxRecencyIndex].is_HIR = TRUE;
+					}
+				}
+            }
+
+			// Increment the Recency of all blocks in the cache
+			for (uint32_t i = 0; i < numLines; i++)
+			{	
+				if (i == blockID)
+					continue;
+				else
+				{
+					myCache[i].Recency++;
+				}
+			}
+			
+			// Increment the Recency of all HIRS_nonresident
+			for (uint32_t i = 0; i < numLines; i++)
+			{
+				HIRS_nonresident[i].Recency++;
+				HIRS_nonresident[i].is_HIR = TRUE;
+			}
+			
+            is_new_entry = FALSE;
 		}
 
 		// TODO
-        void replaced(uint32_t instructionID)
-        {                   
+        void replaced(uint32_t blockID)
+        {           
+            assert(blockID >= 0);
+            assert(blockID <= numLines); 
+            
+            is_new_entry = TRUE; // used to set value in update()
+			is_nonresident_HIR = FALSE;
+			
+			// It is impossible to access array[candidate](= lineAddr; see cache_array.cpp postinsert) since only	
+			// candidate is passed. That means we cannot check HIRS nonresident
+			// since the index in an array doesn't tell you anything about the value
+			// at that index. We have nothing to compare against.
+			// However, this does work if HIRS_size_nonresident == 1 but we still cannot 
+			// compare it against the value.
+			
+			//if ((HIRS_size_nonresident == 1) && (HIRS_nonresident[0] == array[blockID]))
+			//    is_nonresident_HIR = TRUE;
+			
+			// Add the evicted resident HIR entry to the nonresident HIR array
+			uint32_t maxRecencyHIRS = 0;
+			uint32_t maxRecencyIndexHIRS = 0;
+			
+			for (uint32_t i = 0; i < HIRS_size_nonresident; i++)
+			{
+				maxRecencyIndexHIRS = (maxRecencyHIRS > HIRS_nonresident[i].Recency) ? maxRecencyIndexHIRS : i;
+				maxRecencyHIRS = (maxRecencyHIRS > HIRS_nonresident[i].Recency) ? maxRecencyHIRS : HIRS_nonresident[i].Recency;
+				
+				if (HIRS_nonresident[i] == array[blockID])
+				{
+					is_nonresident_HIR = TRUE;
+					HIR_nonresident_replace_index = i; 
+				}
+			}
+			
+			// Transfer to nonresident HIR
+			HIRS_nonresident[maxRecencyIndexHIRS].IRR = myCache[blockID].IRR;
+			HIRS_nonresident[maxRecencyIndexHIRS].Recency = myCache[blockID].Recency;
+			
+			// Reset to default values, Actual values are set in postinsert() -> update() 
+			myCache[blockID].Recency = INT_MAX;  
+			myCache[blockID].IRR = INT_MAX;
         }
 
-		// TODO
         template <typename C> inline uint32_t rank(const MemReq* req, C cands) 
         {
-
+			uint32_t maxRecencyHIRS = 0;
+			uint32_t maxRecencyIndexHIRS = 0;
+			
+			// Search for HIRS index with max Recency
+			for (uint32_t i = 0; i < numLines; i++)
+			{
+				if (myCache[i].is_HIR == TRUE)
+				{   
+					maxRecencyIndexHIRS = (maxRecencyHIRS > myCache[i].Recency) ? maxRecencyIndexHIRS : i;
+					maxRecencyHIRS = (maxRecencyHIRS > myCache[i].Recency) ? maxRecencyHIRS : myCache[i].Recency;
+				}
+			}
+			
+			return maxRecencyIndexHIRS;
         }
-
 
         // Need this bc I implemented the new interface as opposed to the legacy interface     
         DECL_RANK_BINDINGS; // see note above that I imported from repl_policies.h

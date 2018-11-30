@@ -61,15 +61,18 @@ void Cache::initCacheStats(AggregateStat* cacheStat) {
 uint64_t Cache::access(MemReq& req) {
     uint64_t respCycle = req.cycle;
     bool skipAccess = cc->startAccess(req); //may need to skip access due to races (NOTE: may change req.type!)
-    if (likely(!skipAccess)) {
+    
+	
+	
+	if (likely(!skipAccess)) {
         bool updateReplacement = (req.type == GETS) || (req.type == GETX);
-        int32_t lineId = array->lookup(req.lineAddr, &req, updateReplacement);
+        int32_t lineId = array->lookup(req.lineAddr, &req, updateReplacement); // if HIT => update and fetch next instruction
         respCycle += accLat;
 
-        if (lineId == -1 && cc->shouldAllocate(req)) {
+        if (lineId == -1 && cc->shouldAllocate(req)) { // MISS => select candidate and then replace
             //Make space for new line
             Address wbLineAddr;
-            lineId = array->preinsert(req.lineAddr, &req, &wbLineAddr); //find the lineId to replace
+            lineId = array->preinsert(req.lineAddr, &req, &wbLineAddr); // find the lineId to replace, rank()
             trace(Cache, "[%s] Evicting 0x%lx", name.c_str(), wbLineAddr);
 
             //Evictions are not in the critical path in any sane implementation -- we do not include their delays
@@ -78,6 +81,12 @@ uint64_t Cache::access(MemReq& req) {
 
             array->postinsert(req.lineAddr, &req, lineId); //do the actual insertion. NOTE: Now we must split insert into a 2-phase thing because cc unlocks us.
         }
+		
+		
+		
+		
+		
+		
         // Enforce single-record invariant: Writeback access may have a timing
         // record. If so, read it.
         EventRecorder* evRec = zinfo->eventRecorders[req.srcId];

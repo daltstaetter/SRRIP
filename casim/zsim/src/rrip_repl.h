@@ -112,7 +112,7 @@ class SRRIPReplPolicy : public ReplPolicy {
                         return instructionID; // FOUND VICTIM, return its ID
                     }
                 }
-
+                
                 // No match found! Increment each RRPV value in cache and search again
                 for (auto ci = cands.begin(); ci != cands.end(); ci.inc()) 
                 {
@@ -359,10 +359,12 @@ class LIRSReplPolicy : public ReplPolicy
         {
 			uint32_t maxRecencyHIRS = 0;
 			uint32_t maxRecencyIndexHIRS = 0;
+            uint32_t i;
 			
 			// Search for HIRS index with max Recency
-			for (uint32_t i = 0; i < numLines; i++)
+            for (auto ci = cands.begin(); ci != cands.end(); ci.inc()) 
 			{
+                i = *ci;
 				if (myCache[i].is_HIR == TRUE)
 				{   
 					maxRecencyIndexHIRS = (maxRecencyHIRS > myCache[i].Recency) ? maxRecencyIndexHIRS : i;

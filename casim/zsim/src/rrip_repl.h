@@ -219,7 +219,7 @@ class LIRSReplPolicy : public ReplPolicy
             // Cache miss & update is being called after a replace()
             // Set the new value to MAX_VALUE-1 
             // Reset is_new_entry to be false
-            //if(is_new_entry) // update() called after a cache miss!
+            if (is_new_entry) // update() called after a cache miss!
             {	// If we are in here then blockID is the index that we want to replace.
 				// This is set in the rank() function
 				
@@ -245,7 +245,7 @@ class LIRSReplPolicy : public ReplPolicy
 				
 				
             }
-/*            else // update() called after a HIT!!!
+            else // update() called after a HIT!!!
             {
 				// 1) Update
 				//    a. if LIR_HIT update current_block
@@ -258,7 +258,7 @@ class LIRSReplPolicy : public ReplPolicy
 				myCache[blockID].IRR = myCache[blockID].Recency;
 				myCache[blockID].Recency = 0;
 				
-				if(myCache[blockID].is_HIR) // -> promote to LIR
+/*				if(myCache[blockID].is_HIR) // -> promote to LIR
 				{
 					// 1) Search through LIR blocks in cache
 					// 2) Find the LIR entry with the max(Recency), i.e. myCache[maxRecencyIndex]
@@ -286,8 +286,8 @@ class LIRSReplPolicy : public ReplPolicy
 						myCache[maxRecencyIndex].is_HIR = TRUE;
 					}
 				}
-            }
-*/
+  */          }
+
 			// Increment the Recency of all blocks in the cache
 			for (uint32_t i = 0; i < numLines; i++)
 			{	

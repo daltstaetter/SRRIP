@@ -312,8 +312,8 @@ class LIRSReplPolicy : public ReplPolicy
 		// TODO
         void replaced(uint32_t blockID)
         {           
-  /*          assert(blockID >= 0);
-            assert(blockID <= numLines); 
+//            assert(blockID >= 0);
+//            assert(blockID <= numLines); 
             
             is_new_entry = TRUE; // used to set value in update()
 			//is_nonresident_HIR = FALSE;
@@ -351,7 +351,7 @@ class LIRSReplPolicy : public ReplPolicy
 			// Reset to default values, Actual values are set in postinsert() -> update() 
 			myCache[blockID].Recency = INT_MAX;  
 			myCache[blockID].IRR = INT_MAX;
- */       }
+        }
 
         template <typename C> inline uint32_t rank(const MemReq* req, C cands) 
         {

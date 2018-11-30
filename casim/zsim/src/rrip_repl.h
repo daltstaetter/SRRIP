@@ -312,7 +312,7 @@ class LIRSReplPolicy : public ReplPolicy
 		}
 
 		// TODO
-        void replaced(uint32_t blockID, uint32_t value)
+        void replaced(uint32_t blockID)
         {           
             assert(blockID >= 0);
             assert(blockID <= numLines); 

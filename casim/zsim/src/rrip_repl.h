@@ -152,8 +152,8 @@ class LIRSReplPolicy : public ReplPolicy
 {
     protected:
         // add class member variables here
-        Block* myCache; // Array for the lineID i.e. the instruction in the cache
-        Block* HIRS_nonresident;       // Holds the immediacy value (i.e. timestamp) corresponding to the instruction_array; range = 0 to 3
+        Block_t* myCache; // Array for the lineID i.e. the instruction in the cache
+        Block_t* HIRS_nonresident;       // Holds the immediacy value (i.e. timestamp) corresponding to the instruction_array; range = 0 to 3
         uint32_t numLines;             // number of entries in the cache
 		uint32_t LIRS_size;
 		uint32_t HIRS_size;

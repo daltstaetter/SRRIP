@@ -181,7 +181,7 @@ class LIRSReplPolicy : public ReplPolicy
 				HIRS_size = (numLines/HIRS_divisor);
 				LIRS_size = numLines - HIRS_size;
 			}
-			
+		
 			HIRS_size_NR = HIRS_size;
 			
 			// myCache_size = LIRS_size + HIRS_size
@@ -228,7 +228,7 @@ class LIRSReplPolicy : public ReplPolicy
 				
 				if (is_NR_HIR) // Cache miss but NR_HIR HIT!!! 
                 {	// Transfer Recency value from HIRS_NR  
-/*					myCache[blockID].IRR = NR_HIR_hit.Recency;
+					myCache[blockID].IRR = NR_HIR_hit.Recency;
 					myCache[blockID].Recency = 0;
 					myCache[blockID].is_HIR = FALSE; 
 					myCache[blockID].instruction_address = NR_HIR_hit.instruction_address;
@@ -255,8 +255,8 @@ class LIRSReplPolicy : public ReplPolicy
 
 			            myCache[maxRecencyIndexLIRS].is_HIR = TRUE;
                     } // END Pruning
-*/				}
-//				else // is a new entry not in myCache or HIRS_NR
+				}
+				else // is a new entry not in myCache or HIRS_NR
 				{	
 					myCache[blockID].Recency = INT_MAX;  
 					myCache[blockID].IRR = INT_MAX;

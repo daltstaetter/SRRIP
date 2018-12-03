@@ -144,6 +144,7 @@ struct Block {
 	uint32_t Recency;
 	//uint32_t blockID;
 	boolean is_HIR;
+    Address instruction_address;
 };
 
 typedef struct Block Block_t;
@@ -153,15 +154,15 @@ class LIRSReplPolicy : public ReplPolicy
     protected:
         // add class member variables here
         Block_t* myCache; // Array for the lineID i.e. the instruction in the cache
-        Block_t* HIRS_nonresident;       // Holds the immediacy value (i.e. timestamp) corresponding to the instruction_array; range = 0 to 3
+        Block_t* HIRS_NR;       // Holds the immediacy value (i.e. timestamp) corresponding to the instruction_array; range = 0 to 3
+        Block_t NR_HIR_hit;
         uint32_t numLines;             // number of entries in the cache
 		uint32_t LIRS_size;
 		uint32_t HIRS_size;
-		uint32_t HIRS_size_nonresident;
+		uint32_t HIRS_size_NR;
 		const uint32_t HIRS_divisor = 100; // Make HIRS_size = cache_size / HIRS_divisor
         boolean is_new_entry;
-		boolean is_nonresident_HIR;
-		uint32_t HIR_nonresident_replace_index;
+		boolean is_NR_HIR;
 
     public:
         // add member methods here, refer to repl_policies.h
@@ -181,11 +182,11 @@ class LIRSReplPolicy : public ReplPolicy
 				LIRS_size = numLines - HIRS_size;
 			}
 			
-			HIRS_size_nonresident = HIRS_size;
+			HIRS_size_NR = HIRS_size;
 			
 			// myCache_size = LIRS_size + HIRS_size
 			myCache = gm_calloc<Block_t>(numLines); 
-			HIRS_nonresident = gm_calloc<Block_t>(HIRS_size_nonresident);
+			HIRS_NR = gm_calloc<Block_t>(HIRS_size_NR);
 			
 			// Set all initial values to "infinity"
 			for(uint32_t i = 0; i < numLines; i++)
@@ -193,13 +194,15 @@ class LIRSReplPolicy : public ReplPolicy
 				myCache[i].IRR = INT_MAX;
 				myCache[i].Recency = INT_MAX;
 				myCache[i].is_HIR = TRUE;
+                myCache[i].instruction_address = 0;
 			}
 			
-			for(uint32_t i = 0; i < HIRS_size_nonresident; i++)
+			for(uint32_t i = 0; i < HIRS_size_NR; i++)
 			{
-				HIRS_nonresident[i].IRR = INT_MAX;
-				HIRS_nonresident[i].Recency = INT_MAX;
-				HIRS_nonresident[i].is_HIR = TRUE;
+				HIRS_NR[i].IRR = INT_MAX;
+				HIRS_NR[i].Recency = INT_MAX;
+				HIRS_NR[i].is_HIR = TRUE;
+                HIRS_NR[i].instruction_address = 0;
 			}
         }
         
@@ -207,7 +210,7 @@ class LIRSReplPolicy : public ReplPolicy
 		~LIRSReplPolicy() 
 		{
             gm_free(myCache);
-			gm_free(HIRS_nonresident);
+			gm_free(HIRS_NR);
         }
 
 		// TODO
@@ -223,18 +226,42 @@ class LIRSReplPolicy : public ReplPolicy
             {	// If we are in here then blockID is the index that we want to replace.
 				// This is set in the rank() function
 				
-				//if (is_nonresident_HIR)
-                {	// Transfer Recency value from HIRS_nonresident if array[blockID] is in there 
-				//	myCache[blockID].IRR = HIRS_nonresident[HIR_nonresident_replace_index].Recency;
-				//	myCache[blockID].Recency = 0;
-				//	is_nonresident_HIR = FALSE;
-				}
-				//else // is a brand new entry not in myCache or HIRS_nonresident
-				{	// Do I need to check all the myCache Recency values???
-					// Provide default values for a new entry 
+				if (is_NR_HIR) // Cache miss but NR_HIR HIT!!! 
+                {	// Transfer Recency value from HIRS_NR  
+/*					myCache[blockID].IRR = NR_HIR_hit.Recency;
+					myCache[blockID].Recency = 0;
+					myCache[blockID].is_HIR = FALSE; 
+					myCache[blockID].instruction_address = NR_HIR_hit.instruction_address;
+					is_NR_HIR = FALSE;
+
+                    // Pruning Required - After a NR_HIR Hit we need to designate a new 
+                    //                    HIR block. Select the one with the largest Recency.
+                    { // START Pruning
+                        uint32_t maxRecencyLIRS = 0;
+    					uint32_t maxRecencyIndexLIRS = 0;
+	    				
+		    			// 1) Search through LIR blocks in cache
+			    		for (uint32_t i = 0; i < numLines; i++)
+				    	{
+    						maxRecencyIndexLIRS = (maxRecencyLIRS > myCache[i].Recency) ? maxRecencyIndexLIRS : i;
+	    				    maxRecencyLIRS = (maxRecencyLIRS > myCache[i].Recency) ? maxRecencyLIRS : myCache[i].Recency;
+			    		}
+				    	
+			    		for (uint32_t i = 0; i < numLines; i++)
+    					{
+                            // Re-init is_HIR status
+		        			myCache[i].is_HIR = FALSE;
+				        }
+
+			            myCache[maxRecencyIndexLIRS].is_HIR = TRUE;
+                    } // END Pruning
+*/				}
+//				else // is a new entry not in myCache or HIRS_NR
+				{	
 					myCache[blockID].Recency = INT_MAX;  
 					myCache[blockID].IRR = INT_MAX;
 					myCache[blockID].is_HIR = TRUE;
+                    myCache[blockID].instruction_address = lineAddr;
 				}
             }
             else // update() called after a HIT!!!
@@ -280,6 +307,10 @@ class LIRSReplPolicy : public ReplPolicy
 				}
             }
 
+
+
+
+///////////////////////////////////////////////////////////////////////////////
 			// Increment the Recency of all blocks in the cache
 			for (uint32_t i = 0; i < numLines; i++)
 			{	
@@ -291,12 +322,12 @@ class LIRSReplPolicy : public ReplPolicy
 				}
 			}
 			
-			// Increment the Recency of all HIRS_nonresident
-//			for (uint32_t i = 0; i < numLines; i++)
-//			{
-//				HIRS_nonresident[i].Recency++;
-//				HIRS_nonresident[i].is_HIR = TRUE;
-//			}
+			// Increment the Recency of all HIRS_NR
+			for (uint32_t i = 0; i < HIRS_size_NR; i++)
+			{
+				HIRS_NR[i].Recency++;
+				HIRS_NR[i].is_HIR = TRUE;
+			}
 			
             is_new_entry = FALSE;
 		}
@@ -309,38 +340,52 @@ class LIRSReplPolicy : public ReplPolicy
             assert(blockID <= numLines); 
             
             is_new_entry = TRUE; // used to set value in update()
-			//is_nonresident_HIR = FALSE;
+			is_NR_HIR = FALSE;
 			
-			// It is impossible to access array[candidate](= lineAddr; see cache_array.cpp postinsert) since only	
-			// candidate is passed. That means we cannot check HIRS nonresident
-			// since the index in an array doesn't tell you anything about the value
-			// at that index. We have nothing to compare against.
-			// However, this does work if HIRS_size_nonresident == 1 but we still cannot 
-			// compare it against the value.
+            // Check if the new instruction lineAddr is in the NR_HIR
+			for (uint32_t i = 0; i < HIRS_size_NR; i++)
+            {
+                if (HIRS_NR[i].instruction_address == lineAddr)
+                {   // Swap HIRS_NR[i] -> NR_HIR_hit
+                    // myCache[evict] -> HIRS_NR[i]
+                    // in update() NR_HIR_hit -> myCache[evict]
+                    
+                    is_NR_HIR = TRUE;
+			        NR_HIR_hit.Recency = HIRS_NR[i].Recency;
+			        NR_HIR_hit.IRR = HIRS_NR[i].IRR;
+			        NR_HIR_hit.instruction_address = HIRS_NR[i].instruction_address;
+
+			        //Replace index i with the HIR from the cache
+			        HIRS_NR[i].Recency =  myCache[blockID].Recency;
+			        HIRS_NR[i].IRR = myCache[blockID].IRR;
+			        HIRS_NR[i].instruction_address = myCache[blockID].instruction_address;
+			    }
+            } 
+
+            // Missed both Cache and NR_HIR, myCache[evict] -> HIRS_NR[max_recency]
+            if (is_NR_HIR == FALSE)
+            {   // Find max Recency index to replace 
+
+			    // Add the evicted resident HIR entry to the nonresident HIR array
+			    uint32_t maxRecencyHIRS = 0;
+			    uint32_t maxRecencyIndexHIRS = 0;
 			
-			//if ((HIRS_size_nonresident == 1) && (HIRS_nonresident[0] == array[blockID]))
-			//    is_nonresident_HIR = TRUE;
+			    for (uint32_t i = 0; i < HIRS_size_NR; i++)
+			    {
+			    	maxRecencyIndexHIRS = (maxRecencyHIRS > HIRS_NR[i].Recency) ? maxRecencyIndexHIRS : i;
+			    	maxRecencyHIRS = (maxRecencyHIRS > HIRS_NR[i].Recency) ? maxRecencyHIRS : HIRS_NR[i].Recency;
+			    }
+                
+			    // Transfer to nonresident HIR
+                // Swap myCache[evict] -> HIRS_NR[max_recency]
+                // in update() newBlock -> myCache[evict]
+
+			    HIRS_NR[maxRecencyIndexHIRS].IRR = myCache[blockID].IRR;
+			    HIRS_NR[maxRecencyIndexHIRS].Recency = myCache[blockID].Recency;
+			    HIRS_NR[maxRecencyIndexHIRS].is_HIR = TRUE;
+			    HIRS_NR[maxRecencyIndexHIRS].instruction_address = myCache[blockID].instruction_address;
+            }
 			
-			// Add the evicted resident HIR entry to the nonresident HIR array
-//			//uint32_t maxRecencyHIRS = 0;
-			//uint32_t maxRecencyIndexHIRS = 0;
-			
-			//for (uint32_t i = 0; i < HIRS_size_nonresident; i++)
-			{
-			//	maxRecencyIndexHIRS = (maxRecencyHIRS > HIRS_nonresident[i].Recency) ? maxRecencyIndexHIRS : i;
-			//	maxRecencyHIRS = (maxRecencyHIRS > HIRS_nonresident[i].Recency) ? maxRecencyHIRS : HIRS_nonresident[i].Recency;
-				
-			//	if (HIRS_nonresident[i] == value)
-				{
-			//		is_nonresident_HIR = TRUE;
-			//		HIR_nonresident_replace_index = i; 
-				}
-			}
-			
-			// Transfer to nonresident HIR
-			//HIRS_nonresident[maxRecencyIndexHIRS].IRR = myCache[blockID].IRR;
-			//HIRS_nonresident[maxRecencyIndexHIRS].Recency = myCache[blockID].Recency;
-//			
 			// Reset to default values, Actual values are set in postinsert() -> update() 
 			myCache[blockID].Recency = INT_MAX;  
 			myCache[blockID].IRR = INT_MAX;
@@ -364,7 +409,6 @@ class LIRSReplPolicy : public ReplPolicy
 			}
 			
 			return maxRecencyIndexHIRS;
-          //return 0;
         }
 
         // Need this bc I implemented the new interface as opposed to the legacy interface     

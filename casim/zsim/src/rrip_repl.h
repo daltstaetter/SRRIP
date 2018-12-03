@@ -61,7 +61,7 @@ class SRRIPReplPolicy : public ReplPolicy {
         }
 
         // input: instructionID = the index in the array of the hit/miss we want to update
-		void update(uint32_t instructionID, const MemReq* req)
+		void update(uint32_t instructionID, const MemReq* req, Address lineAddr)
 		{
             // Cache miss & update is being called after a replace()
             // Set the new value to MAX_VALUE-1 
@@ -82,7 +82,7 @@ class SRRIPReplPolicy : public ReplPolicy {
             assert(value_array[instructionID] <= MAX_VALUE);
 		}
 
-        void replaced(uint32_t instructionID)
+        void replaced(uint32_t instructionID, Address lineAddr)
         {           
             assert(instructionID >= 0);
             assert(instructionID <= numLines); 
@@ -214,7 +214,7 @@ class LIRSReplPolicy : public ReplPolicy
         // input: blockID = the index in the array (array[id]) of the hit/miss we want to update
 		// ******* Corner Case: you get same instruction twice. You only update the recency and IRR of that block
 		// ******* All other blocks remain untouched.
-		void update(uint32_t blockID, const MemReq* req)
+		void update(uint32_t blockID, const MemReq* req, Address lineAddr)
 		{
             // Cache miss & update is being called after a replace()
             // Set the new value to MAX_VALUE-1 
@@ -302,8 +302,9 @@ class LIRSReplPolicy : public ReplPolicy
 		}
 
 		// TODO
-        void replaced(uint32_t blockID)
+        void replaced(uint32_t blockID, Address lineAddr)
         {           
+            // Need to look at incoming lineAddr to see if its an HIR_nonresident
             assert(blockID >= 0);
             assert(blockID <= numLines); 
             

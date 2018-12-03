@@ -47,8 +47,8 @@ class ReplPolicy : public GlobAlloc {
 
         virtual void setCC(CC* _cc) {cc = _cc;}
 
-        virtual void update(uint32_t id, const MemReq* req) = 0;
-        virtual void replaced(uint32_t id) = 0;
+        virtual void update(uint32_t id, const MemReq* req, Address lineAddr) = 0;
+        virtual void replaced(uint32_t id, Address lineAddr) = 0;
 
         virtual uint32_t rankCands(const MemReq* req, SetAssocCands cands) = 0;
         virtual uint32_t rankCands(const MemReq* req, ZCands cands) = 0;
@@ -110,11 +110,11 @@ class LRUReplPolicy : public ReplPolicy {
             gm_free(array);
         }
 
-        void update(uint32_t id, const MemReq* req) {
+        void update(uint32_t id, const MemReq* reqi, Address lineAddr) {
             array[id] = timestamp++;
         }
 
-        void replaced(uint32_t id) {
+        void replaced(uint32_t id, Address lineAddr) {
             array[id] = 0;
         }
 
@@ -182,7 +182,7 @@ class TreeLRUReplPolicy : public LRUReplPolicy<true> {
             return candArray[start];
         }
 
-        void replaced(uint32_t id) {
+        void replaced(uint32_t id, Address lineAddr) {
             candIdx = 0;
             array[id] = 0;
         }
@@ -214,7 +214,7 @@ class NRUReplPolicy : public LegacyReplPolicy {
             gm_free(candArray);
         }
 
-        void update(uint32_t id, const MemReq* req) {
+        void update(uint32_t id, const MemReq* req, Address lineAddr) {
             //if (array[id]) info("update PRE %d %d %d", id, array[id], youngLines);
             youngLines += 1 - (array[id] >> 1); //+0 if young, +1 if old
             array[id] |= 0x2;
@@ -243,7 +243,7 @@ class NRUReplPolicy : public LegacyReplPolicy {
             return candArray[youngLines % candIdx]; // youngLines used to sort-of-randomize
         }
 
-        void replaced(uint32_t id) {
+        void replaced(uint32_t id, Address lineAddr) {
             //info("repl %d val %d cands %d", id, array[id], candIdx);
             candVal = (1<<20);
             candIdx = 0;
@@ -271,7 +271,7 @@ class RandReplPolicy : public LegacyReplPolicy {
             gm_free(candArray);
         }
 
-        void update(uint32_t id, const MemReq* req) {}
+        void update(uint32_t id, const MemReq* req, Address lineAddr) {}
 
         void recordCandidate(uint32_t id) {
             candArray[candIdx++] = id;
@@ -283,7 +283,7 @@ class RandReplPolicy : public LegacyReplPolicy {
             return candArray[idx];
         }
 
-        void replaced(uint32_t id) {
+        void replaced(uint32_t id, Address lineAddr) {
             candIdx = 0;
         }
 };
@@ -344,7 +344,7 @@ class LFUReplPolicy : public LegacyReplPolicy {
             gm_free(array);
         }
 
-        void update(uint32_t id, const MemReq* req) {
+        void update(uint32_t id, const MemReq* req, Address lineAddr) {
             //ts is the "center of mass" of all the accesses, i.e. the average timestamp
             array[id].ts = (array[id].acc*array[id].ts + timestamp)/(array[id].acc + 1);
             array[id].acc++;
@@ -365,7 +365,7 @@ class LFUReplPolicy : public LegacyReplPolicy {
             return (uint32_t)bestCandidate;
         }
 
-        void replaced(uint32_t id) {
+        void replaced(uint32_t id, Address lineAddr) {
             bestCandidate = -1;
             bestRank.reset();
             array[id].acc = 0;
@@ -418,8 +418,8 @@ class ProfViolReplPolicy : public T {
             parentStat->append(&profNoViolEv);
         }
 
-        void update(uint32_t id, const MemReq* req) {
-            T::update(id, req);
+        void update(uint32_t id, const MemReq* req, Address lineAddr) {
+            T::update(id, req, lineAddr);
 
             bool read = (req->type == GETS);
             assert(read || req->type == GETX);
@@ -449,7 +449,7 @@ class ProfViolReplPolicy : public T {
             if (read) accTimes[id].read  = MAX(accTimes[id].read,  req->cycle);
             else      accTimes[id].write = MAX(accTimes[id].write, req->cycle);
 
-            T::update(id, req);
+            T::update(id, req, lineAddr);
         }
 
         void startReplacement(const MemReq* req) {
@@ -458,8 +458,8 @@ class ProfViolReplPolicy : public T {
             replCycle = req->cycle;
         }
 
-        void replaced(uint32_t id) {
-            T::replaced(id);
+        void replaced(uint32_t id, Address lineAddr) {
+            T::replaced(id, lineAddr);
 
             if (replCycle < MAX(accTimes[id].read, accTimes[id].write)) {
                 profAAE.inc();

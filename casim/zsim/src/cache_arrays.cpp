@@ -41,7 +41,7 @@ int32_t SetAssocArray::lookup(const Address lineAddr, const MemReq* req, bool up
     uint32_t first = set*assoc;
     for (uint32_t id = first; id < first + assoc; id++) {
         if (array[id] ==  lineAddr) {
-            if (updateReplacement) rp->update(id, req);
+            if (updateReplacement) rp->update(id, req, lineAddr);
             return id;
         }
     }
@@ -58,10 +58,11 @@ uint32_t SetAssocArray::preinsert(const Address lineAddr, const MemReq* req, Add
     return candidate;
 }
 
-void SetAssocArray::postinsert(const Address lineAddr, const MemReq* req, uint32_t candidate) {
-    rp->replaced(candidate);
+void SetAssocArray::postinsert(const Address lineAddr, const MemReq* req, uint32_t candidate, Address wbLineAddr) {
+    // DA LIRS: replaced needs to look at the new PC lineAddr to check if its HIR_nonresident
+    rp->replaced(candidate, array[candidate]);
     array[candidate] = lineAddr;
-    rp->update(candidate, req);
+    rp->update(candidate, req, lineAddr);
 }
 
 
@@ -107,7 +108,7 @@ int32_t ZArray::lookup(const Address lineAddr, const MemReq* req, bool updateRep
         uint32_t lineId = lookupArray[w*numSets + (hf->hash(w, lineAddr) & setMask)];
         if (array[lineId] == lineAddr) {
             if (updateReplacement) {
-                rp->update(lineId, req);
+                rp->update(lineId, req, lineAddr);
             }
             return lineId;
         }
@@ -199,7 +200,7 @@ uint32_t ZArray::preinsert(const Address lineAddr, const MemReq* req, Address* w
     return bestCandidate;
 }
 
-void ZArray::postinsert(const Address lineAddr, const MemReq* req, uint32_t candidate) {
+void ZArray::postinsert(const Address lineAddr, const MemReq* req, uint32_t candidate, Address wbLineAddr) {
     //We do the swaps in lookupArray, the array stays the same
     assert(lookupArray[swapArray[0]] == candidate);
     for (uint32_t i = 0; i < swapArrayLen-1; i++) {
@@ -209,9 +210,9 @@ void ZArray::postinsert(const Address lineAddr, const MemReq* req, uint32_t cand
     lookupArray[swapArray[swapArrayLen-1]] = candidate; //note that in preinsert() we walk the array backwards when populating swapArray, so the last elem is where the new line goes
     //info("Inserting lineId %d in position %d", candidate, swapArray[swapArrayLen-1]);
 
-    rp->replaced(candidate);
+    rp->replaced(candidate, lineAddr);
     array[candidate] = lineAddr;
-    rp->update(candidate, req);
+    rp->update(candidate, req, lineAddr);
 
     statSwaps.inc(swapArrayLen-1);
 }

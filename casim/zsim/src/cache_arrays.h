@@ -46,7 +46,7 @@ class CacheArray : public GlobAlloc {
          * there may be some intervening calls to lookup. The implementation is
          * allowed to keep internal state in preinsert() and use it in postinsert()
          */
-        virtual void postinsert(const Address lineAddr, const MemReq* req, uint32_t lineId) = 0;
+        virtual void postinsert(const Address lineAddr, const MemReq* req, uint32_t lineId, Address wbLineAddr) = 0;
 
         virtual void initStats(AggregateStat* parent) {}
 };
@@ -70,7 +70,7 @@ class SetAssocArray : public CacheArray {
 
         int32_t lookup(const Address lineAddr, const MemReq* req, bool updateReplacement);
         uint32_t preinsert(const Address lineAddr, const MemReq* req, Address* wbLineAddr);
-        void postinsert(const Address lineAddr, const MemReq* req, uint32_t candidate);
+        void postinsert(const Address lineAddr, const MemReq* req, uint32_t candidate, Address wbLineAddr);
 };
 
 /* The cache array that started this simulator :) */
@@ -99,7 +99,7 @@ class ZArray : public CacheArray {
 
         int32_t lookup(const Address lineAddr, const MemReq* req, bool updateReplacement);
         uint32_t preinsert(const Address lineAddr, const MemReq* req, Address* wbLineAddr);
-        void postinsert(const Address lineAddr, const MemReq* req, uint32_t candidate);
+        void postinsert(const Address lineAddr, const MemReq* req, uint32_t candidate, Address wbLineAddr);
 
         //zcache-specific, since timing code needs to know the number of swaps, and these depend on idx
         //Should be called after preinsert(). Allows intervening lookups

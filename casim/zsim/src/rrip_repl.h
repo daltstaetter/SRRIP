@@ -353,9 +353,9 @@ class LIRSReplPolicy : public ReplPolicy
                     // in update() NR_HIR_hit -> myCache[evict]
                     
             //        is_NR_HIR = TRUE;
-			//        NR_HIR_hit.Recency = HIRS_NR[i].Recency;
-			//        NR_HIR_hit.IRR = HIRS_NR[i].IRR;
-			//        NR_HIR_hit.instruction_address = HIRS_NR[i].instruction_address;
+			        NR_HIR_hit.Recency = HIRS_NR[i].Recency;
+			        NR_HIR_hit.IRR = HIRS_NR[i].IRR;
+			        NR_HIR_hit.instruction_address = HIRS_NR[i].instruction_address;
 
 			        //Replace index i with the HIR from the cache
 			        HIRS_NR[i].Recency =  myCache[blockID].Recency;

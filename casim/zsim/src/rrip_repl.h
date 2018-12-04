@@ -175,15 +175,15 @@ class LIRSReplPolicy : public ReplPolicy
             is_NR_HIR = FALSE;
 
 			// Used for small cache size (<=100), i.e. cache_size / HIRS_divisor == 0
-			if (numLines <= HIRS_divisor)
+// REMOVE			if (numLines <= HIRS_divisor)
 			{
 				LIRS_size = numLines - 1;
 				HIRS_size = 1;
 			}
-			else
+// REMOVE			else
 			{	// Set HIRS_size to 1% of total cache size
-				HIRS_size = (numLines/HIRS_divisor);
-				LIRS_size = numLines - HIRS_size;
+// REMOVE				HIRS_size = (numLines/HIRS_divisor);
+// REMOVE				LIRS_size = numLines - HIRS_size;
 			}
 		
 			HIRS_size_NR = HIRS_size;
@@ -226,38 +226,39 @@ class LIRSReplPolicy : public ReplPolicy
             // Cache miss & update is being called after a replace()
             // Set the new value to MAX_VALUE-1 
             // Reset is_new_entry to be false
+            //is_new_entry = FALSE;
             if (is_new_entry) // update() called after a cache miss!
             {	// If we are in here then blockID is the index that we want to replace.
 				// This is set in the rank() function
 				
 				if (is_NR_HIR) // Cache miss but NR_HIR HIT!!! 
                 {	// Transfer Recency value from HIRS_NR  
-					myCache[blockID].IRR = NR_HIR_hit.Recency;
-					myCache[blockID].Recency = 0;
-					myCache[blockID].is_HIR = FALSE; 
-					myCache[blockID].instruction_address = NR_HIR_hit.instruction_address;
-					is_NR_HIR = FALSE;
+			//		myCache[blockID].IRR = NR_HIR_hit.Recency;
+			//		myCache[blockID].Recency = 0;
+			//		myCache[blockID].is_HIR = FALSE; 
+			//		myCache[blockID].instruction_address = NR_HIR_hit.instruction_address;
+			//		is_NR_HIR = FALSE;
 
                     // Pruning Required - After a NR_HIR Hit we need to designate a new 
                     //                    HIR block. Select the one with the largest Recency.
                     { // START Pruning
-                        uint32_t maxRecencyLIRS = 0;
-    					uint32_t maxRecencyIndexLIRS = 0;
+            //            uint32_t maxRecencyLIRS = 0;
+    		//			uint32_t maxRecencyIndexLIRS = 0;
 	    				
 		    			// 1) Search through LIR blocks in cache
-			    		for (uint32_t i = 0; i < numLines; i++)
+			//    		for (uint32_t i = 0; i < numLines; i++)
 				    	{
-    						maxRecencyIndexLIRS = (maxRecencyLIRS > myCache[i].Recency) ? maxRecencyIndexLIRS : i;
-	    				    maxRecencyLIRS = (maxRecencyLIRS > myCache[i].Recency) ? maxRecencyLIRS : myCache[i].Recency;
+    		//				maxRecencyIndexLIRS = (maxRecencyLIRS > myCache[i].Recency) ? maxRecencyIndexLIRS : i;
+	    	//			    maxRecencyLIRS = (maxRecencyLIRS > myCache[i].Recency) ? maxRecencyLIRS : myCache[i].Recency;
 			    		}
 				    	
-			    		for (uint32_t i = 0; i < numLines; i++)
+			//    		for (uint32_t i = 0; i < numLines; i++)
     					{
                             // Re-init is_HIR status
-		        			myCache[i].is_HIR = FALSE;
+		    //    			myCache[i].is_HIR = FALSE;
 				        }
 
-			            myCache[maxRecencyIndexLIRS].is_HIR = TRUE;
+			//            myCache[maxRecencyIndexLIRS].is_HIR = TRUE;
                     } // END Pruning
 				}
 				else // is a new entry not in myCache or HIRS_NR
@@ -317,17 +318,17 @@ class LIRSReplPolicy : public ReplPolicy
 			{	
 				if (i == blockID)
 					continue;
-				else
+			else
 				{
 					myCache[i].Recency = (myCache[i].Recency == UINT32_MAX) ? UINT32_MAX : myCache[i].Recency + 1;
 				}
 			}
 			
 			// Increment the Recency of all HIRS_NR
-			for (uint32_t i = 0; i < HIRS_size_NR; i++)
+			//for (uint32_t i = 0; i < HIRS_size_NR; i++)
 			{
-		        HIRS_NR[i].Recency = (HIRS_NR[i].Recency == UINT32_MAX) ? UINT32_MAX : HIRS_NR[i].Recency + 1;
-				HIRS_NR[i].is_HIR = TRUE;
+		    //    HIRS_NR[i].Recency = (HIRS_NR[i].Recency == UINT32_MAX) ? UINT32_MAX : HIRS_NR[i].Recency + 1;
+			//	HIRS_NR[i].is_HIR = TRUE;
 			}
 			
             is_new_entry = FALSE;
@@ -344,22 +345,22 @@ class LIRSReplPolicy : public ReplPolicy
 			is_NR_HIR = FALSE;
 			
             // Check if the new instruction lineAddr is in the NR_HIR
-			for (uint32_t i = 0; i < HIRS_size_NR; i++)
+			//for (uint32_t i = 0; i < HIRS_size_NR; i++)
             {
-                if (HIRS_NR[i].instruction_address == lineAddr)
+            //    if (HIRS_NR[i].instruction_address == lineAddr)
                 {   // Swap HIRS_NR[i] -> NR_HIR_hit
                     // myCache[evict] -> HIRS_NR[i]
                     // in update() NR_HIR_hit -> myCache[evict]
                     
-                    is_NR_HIR = TRUE;
-			        NR_HIR_hit.Recency = HIRS_NR[i].Recency;
-			        NR_HIR_hit.IRR = HIRS_NR[i].IRR;
-			        NR_HIR_hit.instruction_address = HIRS_NR[i].instruction_address;
+            //        is_NR_HIR = TRUE;
+			//        NR_HIR_hit.Recency = HIRS_NR[i].Recency;
+			//        NR_HIR_hit.IRR = HIRS_NR[i].IRR;
+			//        NR_HIR_hit.instruction_address = HIRS_NR[i].instruction_address;
 
 			        //Replace index i with the HIR from the cache
-			        HIRS_NR[i].Recency =  myCache[blockID].Recency;
-			        HIRS_NR[i].IRR = myCache[blockID].IRR;
-			        HIRS_NR[i].instruction_address = myCache[blockID].instruction_address;
+			//        HIRS_NR[i].Recency =  myCache[blockID].Recency;
+			//        HIRS_NR[i].IRR = myCache[blockID].IRR;
+			//        HIRS_NR[i].instruction_address = myCache[blockID].instruction_address;
 			    }
             } 
 

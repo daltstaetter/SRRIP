@@ -175,15 +175,15 @@ class LIRSReplPolicy : public ReplPolicy
             is_NR_HIR = FALSE;
 
 			// Used for small cache size (<=100), i.e. cache_size / HIRS_divisor == 0
-// REMOVE			if (numLines <= HIRS_divisor)
+			if (numLines <= HIRS_divisor)
 			{
 				LIRS_size = numLines - 1;
 				HIRS_size = 1;
 			}
-// REMOVE			else
+			else
 			{	// Set HIRS_size to 1% of total cache size
-// REMOVE				HIRS_size = (numLines/HIRS_divisor);
-// REMOVE				LIRS_size = numLines - HIRS_size;
+				HIRS_size = (numLines/HIRS_divisor);
+				LIRS_size = numLines - HIRS_size;
 			}
 		
 			HIRS_size_NR = HIRS_size;

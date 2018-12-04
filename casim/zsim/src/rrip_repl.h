@@ -135,7 +135,7 @@ class SRRIPReplPolicy : public ReplPolicy {
 //		 The only way to get the instruction is to map them to the same indices
 //       i.e. array[id] -> myCache[blockID]
 
-#include <climits>
+#define UINT32_MYMAX 0xFFFFFFFF
 
 typedef uint32_t boolean;
 
@@ -169,6 +169,9 @@ class LIRSReplPolicy : public ReplPolicy
     
 		explicit LIRSReplPolicy(uint32_t _numLines) : numLines(_numLines) 
         {
+            is_new_entry = TRUE;
+            is_nonresident_HIR = FALSE;
+                
 			// Used for small cache size (<=100), i.e. cache_size / HIRS_divisor == 0
 			if (numLines <= HIRS_divisor)
 			{
@@ -190,15 +193,15 @@ class LIRSReplPolicy : public ReplPolicy
 			// Set all initial values to "infinity"
 			for(uint32_t i = 0; i < numLines; i++)
 			{
-				myCache[i].IRR = INT_MAX;
-				myCache[i].Recency = INT_MAX;
+				myCache[i].IRR = UINT32_MYMAX;
+				myCache[i].Recency = UINT32_MYMAX;
 				myCache[i].is_HIR = TRUE;
 			}
 			
 			for(uint32_t i = 0; i < HIRS_size_nonresident; i++)
 			{
-				HIRS_nonresident[i].IRR = INT_MAX;
-				HIRS_nonresident[i].Recency = INT_MAX;
+				HIRS_nonresident[i].IRR = UINT32_MYMAX;
+				HIRS_nonresident[i].Recency = UINT32_MYMAX;
 				HIRS_nonresident[i].is_HIR = TRUE;
 			}
         }
@@ -232,8 +235,8 @@ class LIRSReplPolicy : public ReplPolicy
 				//else // is a brand new entry not in myCache or HIRS_nonresident
 				{	// Do I need to check all the myCache Recency values???
 					// Provide default values for a new entry 
-					myCache[blockID].Recency = INT_MAX;  
-					myCache[blockID].IRR = INT_MAX;
+					myCache[blockID].Recency = UINT32_MYMAX;  
+					myCache[blockID].IRR = UINT32_MYMAX;
 					myCache[blockID].is_HIR = TRUE;
 				}
             }
@@ -287,14 +290,14 @@ class LIRSReplPolicy : public ReplPolicy
 					continue;
 				else
 				{
-					myCache[i].Recency++;
+				    myCache[i].Recency = (myCache[i].Recency == UINT32_MYMAX) ? UINT32_MYMAX : myCache[i].Recency + 1;
 				}
 			}
 			
 			// Increment the Recency of all HIRS_nonresident
-//			for (uint32_t i = 0; i < numLines; i++)
+//			for (uint32_t i = 0; i < HIRS_size_nonresident; i++)
 //			{
-//				HIRS_nonresident[i].Recency++;
+//				HIRS_nonresident[i].Recency = (HIRS_nonresident[i].Recency == UINT32_MYMAX) ? UINT32_MYMAX : HIRS_nonresident[i].Recency + 1;
 //				HIRS_nonresident[i].is_HIR = TRUE;
 //			}
 			
@@ -341,8 +344,8 @@ class LIRSReplPolicy : public ReplPolicy
 			//HIRS_nonresident[maxRecencyIndexHIRS].Recency = myCache[blockID].Recency;
 //			
 			// Reset to default values, Actual values are set in postinsert() -> update() 
-			myCache[blockID].Recency = INT_MAX;  
-			myCache[blockID].IRR = INT_MAX;
+			myCache[blockID].Recency = UINT32_MYMAX;  
+			myCache[blockID].IRR = UINT32_MYMAX;
         }
 
         template <typename C> inline uint32_t rank(const MemReq* req, C cands) 

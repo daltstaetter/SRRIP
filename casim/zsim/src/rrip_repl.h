@@ -325,10 +325,10 @@ class LIRSReplPolicy : public ReplPolicy
 			}
 			
 			// Increment the Recency of all HIRS_NR
-			//for (uint32_t i = 0; i < HIRS_size_NR; i++)
+			for (uint32_t i = 0; i < HIRS_size_NR; i++)
 			{
-		    //    HIRS_NR[i].Recency = (HIRS_NR[i].Recency == UINT32_MAX) ? UINT32_MAX : HIRS_NR[i].Recency + 1;
-			//	HIRS_NR[i].is_HIR = TRUE;
+		        HIRS_NR[i].Recency = (HIRS_NR[i].Recency == UINT32_MAX) ? UINT32_MAX : HIRS_NR[i].Recency + 1;
+				HIRS_NR[i].is_HIR = TRUE;
 			}
 			
             is_new_entry = FALSE;

@@ -135,7 +135,7 @@ class SRRIPReplPolicy : public ReplPolicy {
 //		 The only way to get the instruction is to map them to the same indices
 //       i.e. array[id] -> myCache[blockID]
 
-#define UINT32_MAX 0xFFFFFFFF
+//#define UINT32_MAX 0xFFFFFFFF
 
 typedef uint32_t boolean;
 
@@ -319,15 +319,14 @@ class LIRSReplPolicy : public ReplPolicy
 					continue;
 				else
 				{
-					myCache[i].Recency = (myCache[i].Recency == UINT32_MAX) ? UINT32_MAX : myCache[i].Recency++;
+					myCache[i].Recency = (myCache[i].Recency == UINT32_MAX) ? UINT32_MAX : myCache[i].Recency + 1;
 				}
 			}
 			
 			// Increment the Recency of all HIRS_NR
 			for (uint32_t i = 0; i < HIRS_size_NR; i++)
 			{
-		        HIRS_NR[i].Recency = (HIRS_NR[i].Recency == UINT32_MAX) ? UINT32_MAX : HIRS_NR[i].Recency++;
-				HIRS_NR[i].Recency++;
+		        HIRS_NR[i].Recency = (HIRS_NR[i].Recency == UINT32_MAX) ? UINT32_MAX : HIRS_NR[i].Recency + 1;
 				HIRS_NR[i].is_HIR = TRUE;
 			}
 			

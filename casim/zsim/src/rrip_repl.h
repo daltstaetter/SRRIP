@@ -345,9 +345,9 @@ class LIRSReplPolicy : public ReplPolicy
 			is_NR_HIR = FALSE;
 			
             // Check if the new instruction lineAddr is in the NR_HIR
-			//for (uint32_t i = 0; i < HIRS_size_NR; i++)
+			for (uint32_t i = 0; i < HIRS_size_NR; i++)
             {
-            //    if (HIRS_NR[i].instruction_address == lineAddr)
+                if (HIRS_NR[i].instruction_address == lineAddr)
                 {   // Swap HIRS_NR[i] -> NR_HIR_hit
                     // myCache[evict] -> HIRS_NR[i]
                     // in update() NR_HIR_hit -> myCache[evict]
@@ -358,9 +358,9 @@ class LIRSReplPolicy : public ReplPolicy
 			//        NR_HIR_hit.instruction_address = HIRS_NR[i].instruction_address;
 
 			        //Replace index i with the HIR from the cache
-			//        HIRS_NR[i].Recency =  myCache[blockID].Recency;
-			//        HIRS_NR[i].IRR = myCache[blockID].IRR;
-			//        HIRS_NR[i].instruction_address = myCache[blockID].instruction_address;
+			        HIRS_NR[i].Recency =  myCache[blockID].Recency;
+			        HIRS_NR[i].IRR = myCache[blockID].IRR;
+			        HIRS_NR[i].instruction_address = myCache[blockID].instruction_address;
 			    }
             } 
 

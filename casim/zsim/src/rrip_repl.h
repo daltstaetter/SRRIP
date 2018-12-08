@@ -149,6 +149,7 @@ struct Block {
 
 typedef struct Block Block_t;
 
+// Need to try one last attemp with the cache and non_resident HIR in a single Block_t array
 class LIRSReplPolicy : public ReplPolicy 
 {
     protected:

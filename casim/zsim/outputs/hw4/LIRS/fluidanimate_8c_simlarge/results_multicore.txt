@@ -1,0 +1,5 @@
+outputs/hw4/LIRS/fluidanimate_8c_simlarge/zsim.out
+563520991
+8.87288175393
+1.08628402502
+

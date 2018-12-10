@@ -1,0 +1,5 @@
+outputs/hw4/LIRS/freqmine_8c_simlarge/zsim.out
+1799652397
+2.77831793647
+2.65355593233
+

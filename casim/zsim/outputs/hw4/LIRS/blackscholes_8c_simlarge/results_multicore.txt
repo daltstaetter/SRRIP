@@ -1,0 +1,5 @@
+outputs/hw4/LIRS/blackscholes_8c_simlarge/zsim.out
+372110661
+10.9179885416
+0.0072486278794
+

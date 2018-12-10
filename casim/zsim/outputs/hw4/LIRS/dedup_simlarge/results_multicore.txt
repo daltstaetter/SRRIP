@@ -1,0 +1,2 @@
+outputs/hw4/LIRS/dedup_8c_simlarge/zsim.out
+0

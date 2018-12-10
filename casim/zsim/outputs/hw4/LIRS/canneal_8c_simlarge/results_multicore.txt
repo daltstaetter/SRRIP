@@ -1,0 +1,5 @@
+outputs/hw4/LIRS/canneal_8c_simlarge/zsim.out
+739906406
+2.32720420723
+11.2945280048
+

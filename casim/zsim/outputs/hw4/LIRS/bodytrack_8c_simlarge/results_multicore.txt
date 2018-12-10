@@ -1,4 +1,3 @@
-outputs/hw4/LIRS/bodytrack_8c_simlarge/zsim.out
 405986334
 12.3158833543
 0.0315372933029

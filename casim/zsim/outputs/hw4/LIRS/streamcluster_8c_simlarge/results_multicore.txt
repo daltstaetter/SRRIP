@@ -1,4 +1,3 @@
-outputs/hw4/LIRS/streamcluster_8c_simlarge/zsim.out
 576290520
 8.67632823112
 1.2882521173

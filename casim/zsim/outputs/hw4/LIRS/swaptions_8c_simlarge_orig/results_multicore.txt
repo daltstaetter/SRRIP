@@ -1,4 +1,3 @@
-outputs/hw4/LIRS/swaptions_8c_simlarge_orig/zsim.out
 392918777
 12.7254159477
 0.00224197539611

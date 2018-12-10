@@ -39,8 +39,8 @@ for i in range(1, len(sys.argv)):
           if (l3Count != 0):
             missCount += int(values[1])
     try:
-        wp.write(filename)
-        wp.write("\n")
+#        wp.write(filename)
+#        wp.write("\n")
         wp.write(str(cycleCount))
         wp.write("\n")
         ipc = instructionCount/cycleCount

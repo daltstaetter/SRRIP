@@ -1,4 +1,3 @@
-outputs/hw4/LIRS/x264_8c_simlarge/zsim.out
 492400480
 10.1544850728
 2.33633793807

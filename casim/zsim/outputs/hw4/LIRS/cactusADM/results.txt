@@ -1,0 +1,5 @@
+./outputs/hw4/LIRS/cactusADM/zsim.out
+1288929677
+0.0775838114246
+125.624133269
+

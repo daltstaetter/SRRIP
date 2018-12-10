@@ -1,0 +1,5 @@
+./outputs/hw4/LIRS/calculix/zsim.out
+138514867
+0.722053698395
+11.667439816
+

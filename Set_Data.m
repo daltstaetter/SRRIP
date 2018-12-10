@@ -5,21 +5,25 @@ outdir = 'C:\Users\labtest\Dropbox\College\Fall_2018\CSE_614_CompArch\HW\HW4\sof
 SRRIP = '/SRRIP';
 LFU = '/LFU';
 LRU = '/LRU';
+LIRS = '/LIRS';
+
 SRRIP_dir = dir([outdir SRRIP]);
 LFU_dir = dir([outdir LFU]);
 LRU_dir = dir([outdir LRU]);
+LIRS_dir = dir([outdir LIRS]);
 
 SRRIP_namelist = {SRRIP_dir(3:end).name}'; % from dir output
 LFU_namelist = {LFU_dir(3:end).name}'; % from dir output
 LRU_namelist = {LRU_dir(3:end).name}'; % from dir output
+LIRS_namelist = {LIRS_dir(3:end).name}'; % from dir output
 
 SRRIP_folder = {SRRIP_dir(3:end).folder}'; % from dir output
 LFU_folder = {LFU_dir(3:end).folder}'; % from dir output
 LRU_folder = {LRU_dir(3:end).folder}'; % from dir output
+LIRS_folder = {LIRS_dir(3:end).folder}'; % from dir output
 
 
-
-%#############################
+%############################# LRU
 inputs = load([LRU_folder{1} '\' LRU_namelist{1} '\' data_file]);
 cycles_LRU_blackscholes 	= inputs(1);%2976022568;
 IPC_LRU_blackscholes 	  	= inputs(2);%1.36514420915;
@@ -50,10 +54,10 @@ cycles_LRU_canneal 			= inputs(1);%5964300845;
 IPC_LRU_canneal 		  	= inputs(2);%0.288713773291;
 MPKI_LRU_canneal 		  	= inputs(3);%13.2381024016;
 
-inputs = load([LRU_folder{7} '\' LRU_namelist{7} '\' data_file]);
-cycles_LRU_dedup 			= inputs(1);%3667428538;
-IPC_LRU_dedup 				= inputs(2);%1.29515163883;
-MPKI_LRU_dedup 				= inputs(3);%4.0264164793;
+%inputs = load([LRU_folder{7} '\' LRU_namelist{7} '\' data_file]);
+%cycles_LRU_dedup 			= inputs(1);%3667428538;
+%IPC_LRU_dedup 				= inputs(2);%1.29515163883;
+%MPKI_LRU_dedup 				= inputs(3);%4.0264164793;
                               %%
 inputs = load([LRU_folder{8} '\' LRU_namelist{8} '\' data_file]);
 cycles_LRU_fluidanimate		= inputs(1);%3712023967;
@@ -130,14 +134,14 @@ cycles_LRU_x264 			= inputs(1);%3066030531;
 IPC_LRU_x264 				= inputs(2);%1.63079026919;
 MPKI_LRU_x264 				= inputs(3);%0.795644205158;
 		                      %%%
-inputs = load([LRU_folder{23} '\' LRU_namelist{23} '\' data_file]);
-cycles_LRU_xalan 			= inputs(1);%63224231;
-IPC_LRU_xalan 				= inputs(2);%1.5818300898;
-MPKI_LRU_xalan 				= inputs(3);%1.33404671539;
+%inputs = load([LRU_folder{23} '\' LRU_namelist{23} '\' data_file]);
+%cycles_LRU_xalan 			= inputs(1);%63224231;
+%IPC_LRU_xalan 				= inputs(2);%1.5818300898;
+%MPKI_LRU_xalan 				= inputs(3);%1.33404671539;
                               %%
-%#############################
 
-
+							  
+%############################# LFU 
 inputs = load([LFU_folder{1} '\' LFU_namelist{1} '\' data_file]);
 cycles_LFU_blackscholes 	= inputs(1);%2976019947;
 IPC_LFU_blackscholes 	  	= inputs(2);% 1.36514540674;
@@ -170,10 +174,10 @@ cycles_LFU_canneal 			= inputs(1);%5810528776;
 IPC_LFU_canneal 		  	= inputs(2);%0.29635553155;
 MPKI_LFU_canneal 		  	= inputs(3);%11.8538834449;
                               %%
-inputs = load([LFU_folder{7} '\' LFU_namelist{7} '\' data_file]);
-cycles_LFU_dedup 			= inputs(1);%3737163063;
-IPC_LFU_dedup 				= inputs(2);%1.33793420937;
-MPKI_LFU_dedup 				= inputs(3);%1.02009562367;
+%inputs = load([LFU_folder{7} '\' LFU_namelist{7} '\' data_file]);
+%cycles_LFU_dedup 			= inputs(1);%3737163063;
+%IPC_LFU_dedup 				= inputs(2);%1.33793420937;
+%MPKI_LFU_dedup 				= inputs(3);%1.02009562367;
 		                      %%
 inputs = load([LFU_folder{8} '\' LFU_namelist{8} '\' data_file]);
 cycles_LFU_fluidanimate 	= inputs(1);%3701027028;
@@ -250,15 +254,15 @@ cycles_LFU_x264 			= inputs(1);%3074981969;
 IPC_LFU_x264 				= inputs(2);%1.62604234412;
 MPKI_LFU_x264 				= inputs(3);%0.85717047589;
 							  %%
-inputs = load([LFU_folder{23} '\' LFU_namelist{23} '\' data_file]);
-cycles_LFU_xalan 			= inputs(1);%63105785;
-IPC_LFU_xalan 				= inputs(2);%1.58474951227;
-MPKI_LFU_xalan 				= inputs(3);%1.30522043577;
+%inputs = load([LFU_folder{23} '\' LFU_namelist{23} '\' data_file]);
+%cycles_LFU_xalan 			= inputs(1);%63105785;
+%IPC_LFU_xalan 				= inputs(2);%1.58474951227;
+%MPKI_LFU_xalan 				= inputs(3);%1.30522043577;
                       
 
 
                               
-%############################# 
+%############################# SRRIP
 inputs = load([SRRIP_folder{1} '\' SRRIP_namelist{1} '\' data_file]);                              
                               %%
 cycles_SRRIP_blackscholes 	= inputs(1);%2976006196;
@@ -290,10 +294,10 @@ cycles_SRRIP_canneal 		= inputs(1);%5815281201;
 IPC_SRRIP_canneal 			= inputs(2);%0.296104109584;
 MPKI_SRRIP_canneal 			= inputs(3);%11.9204438912;
                               %%%%
-inputs = load([SRRIP_folder{7} '\' SRRIP_namelist{7} '\' data_file]); 
-cycles_SRRIP_dedup 			= inputs(1);%3604378922;
-IPC_SRRIP_dedup 			= inputs(2);%1.31670803218;
-MPKI_SRRIP_dedup 		  	= inputs(3);%0.984618928471;
+%inputs = load([SRRIP_folder{7} '\' SRRIP_namelist{7} '\' data_file]); 
+%cycles_SRRIP_dedup 			= inputs(1);%3604378922;
+%IPC_SRRIP_dedup 			= inputs(2);%1.31670803218;
+%MPKI_SRRIP_dedup 		  	= inputs(3);%0.984618928471;
                               %%%%
 inputs = load([SRRIP_folder{8} '\' SRRIP_namelist{8} '\' data_file]); 
 cycles_SRRIP_fluidanimate	= inputs(1);%3705886751;
@@ -370,11 +374,128 @@ cycles_SRRIP_x264 			= inputs(1);%3055422067;
 IPC_SRRIP_x264 				= inputs(2);%1.63646822349;
 MPKI_SRRIP_x264 			= inputs(3);%0.750672618097;
                               %%%%%%
-inputs = load([SRRIP_folder{23} '\' SRRIP_namelist{23} '\' data_file]); 
-cycles_SRRIP_xalan 			= inputs(1);%63080178;
-IPC_SRRIP_xalan 		   	= inputs(2);%1.58535491133;
-MPKI_SRRIP_xalan 		  	= inputs(3);%1.28164271057;
+%inputs = load([SRRIP_folder{23} '\' SRRIP_namelist{23} '\' data_file]); 
+%cycles_SRRIP_xalan 			= inputs(1);%63080178;
+%IPC_SRRIP_xalan 		   	= inputs(2);%1.58535491133;
+%MPKI_SRRIP_xalan 		  	= inputs(3);%1.28164271057;
 
+%############################# LIRS
+inputs = load([LRU_folder{1} '\' LIRS_namelist{1} '\' data_file]);
+cycles_LIRS_blackscholes 	= inputs(1);%2976022568;
+IPC_LIRS_blackscholes 	  	= inputs(2);%1.36514420915;
+MPKI_LIRS_blackscholes 		= inputs(3);%0.00724838166274;
+                              %%
+inputs = load([LIRS_folder{2} '\' LIRS_namelist{2} '\' data_file]);							  
+cycles_LIRS_bodytrack	 	= inputs(1);%2966922030;
+IPC_LIRS_bodytrack 			= inputs(2);%1.6852578893;
+MPKI_LIRS_bodytrack 			= inputs(3);%0.0362607914424;
+	                          %%
+inputs = load([LIRS_folder{3} '\' LIRS_namelist{3} '\' data_file]);
+cycles_LIRS_bzip2 			= inputs(1);%98802314;
+IPC_LIRS_bzip2 				= inputs(2);%1.01212433142;
+MPKI_LIRS_bzip2 				= inputs(3);%2.85083355712;
+	                          %%
+inputs = load([LIRS_folder{4} '\' LIRS_namelist{4} '\' data_file]);
+cycles_LIRS_cactusADM		= inputs(1);%94483489;
+IPC_LIRS_cactusADM 			= inputs(2);%1.05849859122;
+MPKI_LIRS_cactusADM 			= inputs(3);%4.82934615757;
+	                          %%
+inputs = load([LIRS_folder{5} '\' LIRS_namelist{5} '\' data_file]);
+cycles_LIRS_calculix 		= inputs(1);%49437227;
+IPC_LIRS_calculix 		    = inputs(2);%2.02316913932;
+MPKI_LIRS_calculix 			= inputs(3);%0.0588782997043;
+	                          %%
+inputs = load([LIRS_folder{6} '\' LIRS_namelist{6} '\' data_file]);
+cycles_LIRS_canneal 			= inputs(1);%5964300845;
+IPC_LIRS_canneal 		  	= inputs(2);%0.288713773291;
+MPKI_LIRS_canneal 		  	= inputs(3);%13.2381024016;
+
+%inputs = load([LIRS_folder{7} '\' LIRS_namelist{7} '\' data_file]);
+%cycles_LIRS_dedup 			= inputs(1);%3667428538;
+%IPC_LIRS_dedup 				= inputs(2);%1.29515163883;
+%MPKI_LIRS_dedup 				= inputs(3);%4.0264164793;
+                              %%
+inputs = load([LIRS_folder{8} '\' LIRS_namelist{8} '\' data_file]);
+cycles_LIRS_fluidanimate		= inputs(1);%3712023967;
+IPC_LIRS_fluidanimate 	  	= inputs(2);%1.34697815894;
+MPKI_LIRS_fluidanimate 		= inputs(3);%0.898087868196;
+                              %%
+inputs = load([LIRS_folder{9} '\' LIRS_namelist{9} '\' data_file]);
+cycles_LIRS_freqmine 		= inputs(1);%4307884748;
+IPC_LIRS_freqmine 		  	= inputs(2);%1.16066753209;
+MPKI_LIRS_freqmine 			= inputs(3);%1.05824795239;
+                              %%
+inputs = load([LIRS_folder{10} '\' LIRS_namelist{10} '\' data_file]);
+cycles_LIRS_gcc 				= inputs(1);%128749596;
+IPC_LIRS_gcc 			  	= inputs(2);%0.77680280255;
+MPKI_LIRS_gcc 			  	= inputs(3);%2.88087413235;
+		                      %%
+inputs = load([LIRS_folder{11} '\' LIRS_namelist{11} '\' data_file]);
+cycles_LIRS_hmmer 			= inputs(1);%77629605;
+IPC_LIRS_hmmer 				= inputs(2);%1.288191715;
+MPKI_LIRS_hmmer 				= inputs(3);%1.56272165223;
+		                      %%
+inputs = load([LIRS_folder{12} '\' LIRS_namelist{12} '\' data_file]);
+cycles_LIRS_lbm 				= inputs(1);%173903648;
+IPC_LIRS_lbm 		     	= inputs(2);%0.575043595405;
+MPKI_LIRS_lbm 			  	= inputs(3);%30.9623253309;
+                              %%%
+inputs = load([LIRS_folder{13} '\' LIRS_namelist{13} '\' data_file]);
+cycles_LIRS_leslie3d 		= inputs(1);%217334159;
+IPC_LIRS_leslie3d 			= inputs(2);%0.460161018683;
+MPKI_LIRS_leslie3d 			= inputs(3);%23.8220055798;
+                              %%%
+inputs = load([LIRS_folder{14} '\' LIRS_namelist{14} '\' data_file]);
+cycles_LIRS_libquantum 		= inputs(1);%195615585;
+IPC_LIRS_libquantum 		    = inputs(2);%0.511214635582;
+MPKI_LIRS_libquantum 	  	= inputs(3);%25.0455917933;
+                              %%%
+inputs = load([LIRS_folder{15} '\' LIRS_namelist{15} '\' data_file]);
+cycles_LIRS_mcf 				= inputs(1);%800071388;
+IPC_LIRS_mcf 			  	= inputs(2);%0.124989904026;
+MPKI_LIRS_mcf 			  	= inputs(3);%80.9870648494;
+		                      %%%
+inputs = load([LIRS_folder{16} '\' LIRS_namelist{16} '\' data_file]);
+cycles_LIRS_milc 			= inputs(1);%150453561;
+IPC_LIRS_milc 			  	= inputs(2);%0.66467125361;
+MPKI_LIRS_milc 				= inputs(3);%14.9446776433;
+		                      %%
+inputs = load([LIRS_folder{17} '\' LIRS_namelist{17} '\' data_file]);
+cycles_LIRS_namd 			= inputs(1);%54966721;
+IPC_LIRS_namd 			  	= inputs(2);%1.81957821352;
+MPKI_LIRS_namd 				= inputs(3);%0.371559628991;
+		                      %%%
+inputs = load([LIRS_folder{18} '\' LIRS_namelist{18} '\' data_file]);
+cycles_LIRS_sjeng 			= inputs(1);%82607916;
+IPC_LIRS_sjeng 				= inputs(2);%1.21062675156;
+MPKI_LIRS_sjeng 				= inputs(3);%0.36225336351;
+		                      %%%
+inputs = load([LIRS_folder{19} '\' LIRS_namelist{19} '\' data_file]);
+cycles_LIRS_soplex 			= inputs(1);%227909592;
+IPC_LIRS_soplex 			  	= inputs(2);%0.438776429383;
+MPKI_LIRS_soplex 		  	= inputs(3);%20.9452857725;
+                              %%%
+inputs = load([LIRS_folder{20} '\' LIRS_namelist{20} '\' data_file]);
+cycles_LIRS_streamcluster	= inputs(1);%7700686007;
+IPC_LIRS_streamcluster 		= inputs(2);%0.649293071741;
+MPKI_LIRS_streamcluster 		= inputs(3);%7.33958215848;
+                              %%%
+inputs = load([LIRS_folder{21} '\' LIRS_namelist{21} '\' data_file]);
+cycles_LIRS_swaptions 		= inputs(1);%3143283693;
+IPC_LIRS_swaptions 			= inputs(2);%1.59070988188;
+MPKI_LIRS_swaptions 			= inputs(3);%0.00224197648974;
+                              %%
+inputs = load([LIRS_folder{22} '\' LIRS_namelist{22} '\' data_file]);
+cycles_LIRS_x264 			= inputs(1);%3066030531;
+IPC_LIRS_x264 				= inputs(2);%1.63079026919;
+MPKI_LIRS_x264 				= inputs(3);%0.795644205158;
+		                      %%%
+%inputs = load([LIRS_folder{23} '\' LIRS_namelist{23} '\' data_file]);
+%cycles_LIRS_xalan 			= inputs(1);%63224231;
+%IPC_LIRS_xalan 				= inputs(2);%1.5818300898;
+%MPKI_LIRS_xalan 				= inputs(3);%1.33404671539;
+                              %%
+%#############################
 
 
 

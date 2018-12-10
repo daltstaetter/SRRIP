@@ -1,5 +1,3 @@
-./outputs/hw4/LIRS/libquantum/zsim.out
 198105419
 0.504789028512
 25.2941252587
-

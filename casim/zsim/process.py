@@ -4,9 +4,11 @@ from __future__ import division
 import sys
 import os
 
-#print "This is the name of the script: ", sys.argv[0]
-#print "Number of arguments: ", len(sys.argv)
-#print "The arguments are: " , str(sys.argv)
+# usage: ls outputs/hw4/*/*/zsim.out | xargs ./process.py
+
+print "This is the name of the script: ", sys.argv[0]
+print "Number of arguments: ", len(sys.argv)
+print "The arguments are: " , str(sys.argv)
 
 
 filename = sys.argv[1]
@@ -31,16 +33,18 @@ for line in fp:
     elif (values[0] == "mGETS:" or values[0] == "mGETXIM:" or values[0] == "mGETXSM:"):
       if (l3Count != 0):
         missCount += int(values[1])
-
-wp.write(filename)
-wp.write("\n")
-wp.write(str(cycleCount))
-wp.write("\n")
-ipc = instructionCount/cycleCount
-wp.write(str(ipc))
-wp.write("\n")
-mpki = 1000 * (missCount/instructionCount)
-wp.write(str(mpki))
-wp.write("\n\n")
-fp.close()
-wp.close()
+try:
+    wp.write(filename)
+    wp.write("\n")
+    wp.write(str(cycleCount))
+    wp.write("\n")
+    ipc = instructionCount/cycleCount
+    wp.write(str(ipc))
+    wp.write("\n")
+    mpki = 1000 * (missCount/instructionCount)
+    wp.write(str(mpki))
+    wp.write("\n\n")
+    fp.close()
+    wp.close()
+except:
+    print "ERROR: " + filename

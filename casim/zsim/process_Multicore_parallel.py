@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+# usage: ls outputs/hw4/*/*_8c_*/zsim.out | xargs ./process_Multicore_parallel.py
+
 from __future__ import division
 import sys
 import os
@@ -12,7 +14,7 @@ for i in range(1, len(sys.argv)):
     filename = sys.argv[i]
     dirname = os.path.dirname(filename)
     fp = open(filename, "r")
-    wp = open(dirname + '/results_multicore_attempt2.txt', "w")
+    wp = open(dirname + '/results_multicore.txt', "w")
     cycleCount = 0
     cCycles = 0;
     cycles = 0;
@@ -36,16 +38,18 @@ for i in range(1, len(sys.argv)):
         elif (values[0] == "mGETS:" or values[0] == "mGETXIM:" or values[0] == "mGETXSM:"):
           if (l3Count != 0):
             missCount += int(values[1])
-    
-    wp.write(filename)
-    wp.write("\n")
-    wp.write(str(cycleCount))
-    wp.write("\n")
-    ipc = instructionCount/cycleCount
-    wp.write(str(ipc))
-    wp.write("\n")
-    mpki = 1000 * (missCount/instructionCount)
-    wp.write(str(mpki))
-    wp.write("\n\n")
-    fp.close()
-    wp.close()
+    try:
+        wp.write(filename)
+        wp.write("\n")
+        wp.write(str(cycleCount))
+        wp.write("\n")
+        ipc = instructionCount/cycleCount
+        wp.write(str(ipc))
+        wp.write("\n")
+        mpki = 1000 * (missCount/instructionCount)
+        wp.write(str(mpki))
+        wp.write("\n\n")
+        fp.close()
+        wp.close()
+    except:
+        print "ERROR: " + filename
